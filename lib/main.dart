@@ -1,8 +1,9 @@
-import 'dart:convert'; // สำหรับการจัดการ JSON
+// สำหรับการจัดการ JSON
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart'; // สำหรับการโหลดไฟล์
+// สำหรับการโหลดไฟล์
+// ignore: unused_import
 import 'package:flutter_application_1/all_books_page.dart';
-import 'package:flutter_application_1/category_books_page.dart';
+// import 'package:flutter_application_1/category_books_page.dart';
 import 'search_page.dart';
 import 'menu_page.dart';
 import 'add_book.dart'; // Import AddBookScreen
@@ -41,24 +42,6 @@ class LibraryPage extends StatefulWidget {
 }
 
 class _LibraryPageState extends State<LibraryPage> {
-  // List<dynamic> books = [];
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   BookService().loadBooks();
-  //   // loadBooks();
-  // }
-
-  // // Future<void> loadBooks() async {
-  // //   // โหลดข้อมูลจากไฟล์ JSON
-  // //   final String response = await rootBundle.loadString('assets/books.json');
-  // //   final data = await json.decode(response);
-  // //   setState(() {
-  // //     books = data['books'];
-  // //   });
-  // // }
-
   List<dynamic> books = [];
   final BookService _bookService =
       BookService(); // สร้าง instance ของ BookService
@@ -81,7 +64,7 @@ class _LibraryPageState extends State<LibraryPage> {
       books.removeWhere((book) => book['id'] == bookId);
     });
 
-    // ถ้าคุณต้องการบันทึกการเปลี่ยนแปลงกลับไปยังไฟล์ JSON
+    // ถ้าต้องการบันทึกการเปลี่ยนแปลงกลับไปยังไฟล์ JSON
     // สามารถใช้แพ็กเกจเช่น path_provider และ dart:io ในการเขียนข้อมูลใหม่ไปยังไฟล์ JSON
   }
 
@@ -122,10 +105,10 @@ class _LibraryPageState extends State<LibraryPage> {
             const SizedBox(height: 30),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: books.take(3).map((book) {
+              children: books.take(5).map((book) {
                 return Container(
-                  height: 180,
-                  width: 120,
+                  height: 150,
+                  width: 100,
                   decoration: BoxDecoration(
                     image: DecorationImage(
                       image: AssetImage(book['coverImage']),
@@ -178,7 +161,8 @@ class _LibraryPageState extends State<LibraryPage> {
             MaterialPageRoute(builder: (context) => AddBookScreen()),
           );
           if (result == true) {
-            BookService().loadBooks();
+            loadBooks();
+            // BookService().loadBooks();
           }
         },
         child: const Icon(Icons.add), // ปุ่มรูปเครื่องหมายบวก
@@ -217,67 +201,40 @@ class _LibraryPageState extends State<LibraryPage> {
   }
 
   Widget _buildCategoryButton(String category, double screenWidth) {
-    return GestureDetector(
-      onTap: () {
-        // เมื่อกดปุ่ม ให้ไปยังหน้าที่แสดงหนังสือตามประเภท
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => CategoryBooksPage(
-              category: category,
-              books:
-                  books, // ส่งข้อมูลหนังสือทั้งหมดไปยังหน้า CategoryBooksPage
-            ),
-          ),
-        );
-      },
-      child: Container(
-        width: screenWidth * 0.25,
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        decoration: BoxDecoration(
-          color: const Color.fromARGB(255, 255, 217, 92),
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: const Color.fromARGB(255, 255, 255, 255)),
-        ),
-        alignment: Alignment.center,
-        child: Text(
-          category,
-          style: const TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-            fontSize: 14,
-          ),
+    return Container(
+      width: screenWidth * 0.25,
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      decoration: BoxDecoration(
+        color: const Color.fromARGB(255, 255, 217, 92),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: const Color.fromARGB(255, 255, 255, 255)),
+      ),
+      alignment: Alignment.center,
+      child: Text(
+        category,
+        style: const TextStyle(
+          color: Colors.black,
+          fontWeight: FontWeight.bold,
+          fontSize: 14,
         ),
       ),
     );
   }
 
   Widget _buildSeeAllButton(double screenWidth) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => AllBooksPage(
-              books: books, // ส่งข้อมูลหนังสือทั้งหมดไปยังหน้า AllBooksPage
-            ),
-          ),
-        );
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-        decoration: BoxDecoration(
-          color: Color.fromARGB(255, 255, 217, 92),
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: const Color.fromARGB(255, 255, 255, 255)),
-        ),
-        child: const Text(
-          'See all',
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-            fontSize: 12,
-          ),
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      decoration: BoxDecoration(
+        color: Color.fromARGB(255, 255, 217, 92),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: const Color.fromARGB(255, 255, 255, 255)),
+      ),
+      child: const Text(
+        'See all',
+        style: TextStyle(
+          color: Colors.black,
+          fontWeight: FontWeight.bold,
+          fontSize: 12,
         ),
       ),
     );
@@ -363,8 +320,10 @@ class BookListItem extends StatelessWidget {
                         builder: (context) => EditBookScreen(bookId: id),
                       ),
                     );
+
                     if (result == true) {
-                      BookService().loadBooks();
+                      // โหลดข้อมูลใหม่และอัปเดต state หลังแก้ไขหนังสือ
+                      loadBooks();
                     }
                   },
                   child: const Text(
@@ -402,7 +361,8 @@ class BookListItem extends StatelessWidget {
 
                     if (result == true) {
                       print('Deleted book with id: $id');
-                      BookService().loadBooks();
+                      // BookService().loadBooks();
+                      loadBooks();
                     }
                   },
                   child: const Text(
@@ -420,4 +380,6 @@ class BookListItem extends StatelessWidget {
       ),
     );
   }
+
+  loadBooks() {}
 }

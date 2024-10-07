@@ -13,7 +13,7 @@ class DeleteBookScreen extends StatelessWidget {
 
   // Function to delete the book from the server
   Future<void> deleteBook(String id) async {
-    final url = 'http://192.168.1.100:3000/books/$id'; // URL สำหรับลบหนังสือ
+    final url = 'http://localhost:3000/books/$id'; // URL สำหรับลบหนังสือ
     try {
       final response = await http.delete(Uri.parse(url));
       if (response.statusCode == 200) {

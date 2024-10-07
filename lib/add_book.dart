@@ -53,7 +53,7 @@ class _AddBookScreenState extends State<AddBookScreen> {
       try {
         var response = await http.post(
           // Uri.parse('http://localhost:3000/books'),
-          Uri.parse('http://192.168.1.100:3000/books'),
+          Uri.parse('http://localhost:3000/books'),
           headers: {'Content-Type': 'application/json'},
           body: jsonEncode(bookData),
         );
@@ -62,7 +62,7 @@ class _AddBookScreenState extends State<AddBookScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Book saved successfully!')),
           );
-          Navigator.pop(context);
+          Navigator.pop(context, true);
         } else {
           throw Exception('Failed to save book');
         }
@@ -207,7 +207,8 @@ class _AddBookScreenState extends State<AddBookScreen> {
                   children: [
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: const Color.fromARGB(255, 63, 142, 206),
+                        backgroundColor:
+                            const Color.fromARGB(255, 63, 142, 206),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
@@ -217,7 +218,7 @@ class _AddBookScreenState extends State<AddBookScreen> {
                     ),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: const Color.fromARGB(255, 219, 86, 77),
+                        backgroundColor: const Color.fromARGB(255, 219, 86, 77),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),

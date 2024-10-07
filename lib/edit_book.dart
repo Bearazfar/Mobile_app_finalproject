@@ -9,7 +9,7 @@ class EditBookScreen extends StatelessWidget {
 
   Future<Map<String, dynamic>> _fetchBookData(String bookId) async {
     var response =
-        await http.get(Uri.parse('http://localhost:3000/books/${bookId}'));
+        await http.get(Uri.parse('http://localhost:3000/books/$bookId'));
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
@@ -32,6 +32,7 @@ class EditBookScreen extends StatelessWidget {
       print('Book updated successfully');
     } else {
       print('Failed to update book');
+      throw Exception('Failed to update book');
     }
   }
 
@@ -80,7 +81,12 @@ class EditBookScreen extends StatelessWidget {
                 children: [
                   TextFormField(
                     initialValue: _bookName,
-                    decoration: const InputDecoration(labelText: "Book Name"),
+                    decoration: InputDecoration(
+                      labelText: "Book Name",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                    ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter a book name';
@@ -91,9 +97,15 @@ class EditBookScreen extends StatelessWidget {
                       _bookName = value;
                     },
                   ),
+                  const SizedBox(height: 10),
                   TextFormField(
                     initialValue: _authorName,
-                    decoration: const InputDecoration(labelText: "Author Name"),
+                    decoration: InputDecoration(
+                      labelText: "Author Name",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                    ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter an author name';
@@ -104,9 +116,15 @@ class EditBookScreen extends StatelessWidget {
                       _authorName = value;
                     },
                   ),
+                  const SizedBox(height: 10),
                   DropdownButtonFormField<String>(
                     value: _category,
-                    decoration: const InputDecoration(labelText: "Category"),
+                    decoration: InputDecoration(
+                      labelText: "Category",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                    ),
                     items: <String>['Fantasy', 'Romance', 'Mystery']
                         .map((String value) {
                       return DropdownMenuItem<String>(
@@ -120,37 +138,55 @@ class EditBookScreen extends StatelessWidget {
                     onSaved: (value) {
                       _category = value;
                     },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please select a category';
+                      }
+                      return null;
+                    },
                   ),
+                  const SizedBox(height: 10),
                   TextFormField(
                     initialValue: _yearOfPublication,
-                    decoration:
-                        const InputDecoration(labelText: "Year of Publication"),
+                    decoration: InputDecoration(
+                      labelText: "Year of Publication",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                    ),
                     onSaved: (value) {
                       _yearOfPublication = value;
                     },
                   ),
+                  const SizedBox(height: 10),
                   TextFormField(
                     initialValue: _isbn,
-                    decoration: const InputDecoration(labelText: "ISBN"),
+                    decoration: InputDecoration(
+                      labelText: "ISBN",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                    ),
                     onSaved: (value) {
                       _isbn = value;
                     },
                   ),
                   const SizedBox(height: 20),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue,
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 30, vertical: 15),
+                          backgroundColor:
+                              const Color.fromARGB(255, 63, 142, 206),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
                         ),
-                        child: const Text(
-                          "Save",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        onPressed: () {
+                        child: const Text("Save",
+                            style: TextStyle(
+                                color: Color.fromARGB(255, 255, 255, 255))),
+                        onPressed: () async {
                           if (_formKey.currentState!.validate()) {
                             _formKey.currentState!.save();
                             var updatedBook = {
@@ -160,22 +196,31 @@ class EditBookScreen extends StatelessWidget {
                               'yearpubish': _yearOfPublication,
                               'isbn': _isbn,
                             };
-                            _updateBook(bookId, updatedBook).then((_) {
-                              Navigator.pop(context);
-                            });
+                            try {
+                              await _updateBook(bookId, updatedBook);
+                              Navigator.pop(context,
+                                  true); // Return true to indicate successful update
+                            } catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                    content: Text(
+                                        'Failed to update book: ${e.toString()}')),
+                              );
+                            }
                           }
                         },
                       ),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.red,
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 30, vertical: 15),
+                          backgroundColor:
+                              const Color.fromARGB(255, 219, 86, 77),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
                         ),
-                        child: const Text(
-                          "Cancel",
-                          style: TextStyle(color: Colors.white),
-                        ),
+                        child: const Text("Cancel",
+                            style: TextStyle(
+                                color: Color.fromARGB(255, 255, 255, 255))),
                         onPressed: () {
                           Navigator.pop(context);
                         },
